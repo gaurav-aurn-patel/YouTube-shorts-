@@ -643,6 +643,11 @@
       opacity: 1;
     }
 
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     @media (max-width: 900px) {
       .showcase-grid {
         grid-template-columns: 1fr;
@@ -730,6 +735,38 @@
       <div class="showcase-grid">
         <!-- Interactive Controls & Output -->
         <div class="card">
+          <!-- OpenAI API Key Configuration Card -->
+          <div class="api-key-card" style="margin-bottom: 24px; padding: 18px; background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.35); border-radius: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="#A78BFA"><path d="M12.65 10C11.83 7.67 9.61 6 7 6c-3.31 0-6 2.69-6 6s2.69 6 6 6c2.61 0 4.83-1.67 5.65-4H17v4h4v-4h2v-4H12.65zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <span style="font-family: var(--font-display); font-weight: 700; font-size: 14px; color: #FFFFFF;">OpenAI API Key (Live Generation)</span>
+              </div>
+              <span id="apiKeyStatusBadge" class="brand-badge" style="color: var(--accent-amber); background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.4);">Template Mode</span>
+            </div>
+            
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.5;">
+              Input your personal OpenAI API key (<code style="color: var(--accent-cyan);">sk-...</code>) below to enable live custom script generation with <strong>GPT-4o-mini</strong>. Your key is stored strictly on your device in browser <code style="color: var(--accent-cyan);">localStorage</code>.
+            </p>
+
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <div style="position: relative; flex: 1; min-width: 220px;">
+                <input type="password" id="openaiApiKeyInput" class="input-field" placeholder="sk-proj-..." style="padding-right: 44px; font-family: monospace; font-size: 13px;">
+                <button type="button" id="toggleKeyVisibilityBtn" title="Toggle Visibility" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 15px; padding: 4px;">👁️</button>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="saveKeyBtn">Save Key</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="clearKeyBtn" style="display: none; color: #EF4444; border-color: rgba(239, 68, 68, 0.4);">Clear</button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: var(--text-muted); flex-wrap: wrap; gap: 6px;">
+              <span>AI Engine: <strong style="color: #CBD5E1;">OpenAI gpt-4o-mini</strong> (Fast & High-Retention)</span>
+              <span id="apiKeyStorageNotice">🔒 Key stored locally in your browser</span>
+            </div>
+
+            <!-- Error Banner -->
+            <div id="apiErrorBanner" style="display: none; margin-top: 12px; padding: 10px 14px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; font-size: 12px; color: #FCA5A5;"></div>
+          </div>
+
           <div class="controls-row">
             <label class="control-label">1. Select Viral Niche</label>
             <div class="chips-group" id="nicheChips">
@@ -772,4 +809,558 @@
             Generate Viral 9:16 Shorts Script
           </button>
 
-          <!-- Generated 
+          <!-- Generated Script Output -->
+          <div class="script-output" id="scriptOutput">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="hook-badge" id="outputViralScore">Viral Score: 96/100</span>
+              <button class="btn btn-secondary btn-sm" onclick="copyFullScript()">Copy Full Script</button>
+            </div>
+
+            <h3 id="outputTitle" style="font-family: var(--font-display); font-size: 18px; margin-bottom: 8px;">The Cosmic Monster Dragging Our Galaxy</h3>
+            <p id="outputRationale" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Pattern interrupt + cosmic existential threat trigger + seamless loop bridge.</p>
+
+            <div style="padding: 12px; background: rgba(255, 0, 51, 0.1); border: 1px solid var(--accent-red); border-radius: 8px; margin-bottom: 14px;">
+              <div style="font-size: 10px; font-weight: 800; color: #FFA3B4; text-transform: uppercase;">0:00 - 0:03 THE HOOK (Must Stop The Swipe)</div>
+              <div id="outputHook" style="font-weight: 700; font-size: 14px; margin-top: 4px; color: #FFFFFF;">"Our entire galaxy is moving at 1.3 million miles per hour towards this..."</div>
+            </div>
+
+            <div id="outputScenes"></div>
+
+            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-green); border-radius: 8px; margin-top: 14px;">
+              <div style="font-size: 10px; font-weight: 800; color: var(--accent-green); text-transform: uppercase;">The Seamless Loop Trick</div>
+              <div id="outputLoop" style="font-size: 13px; font-weight: 600; color: #E2E8F0; margin-top: 4px;">"...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:16 Smartphone Safe Zone Simulator -->
+        <div id="safezone">
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--accent-cyan);">9:16 UI COLLISION TESTER</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Verify Subtitle Placement</div>
+          </div>
+
+          <div class="phone-simulator">
+            <div class="phone-notch"></div>
+
+            <!-- Danger Zone Top -->
+            <div class="danger-zone-top">
+              ⚠️ TOP DEAD ZONE<br>(Search & Audio Bar)
+            </div>
+
+            <!-- Center Safe Zone -->
+            <div class="safe-zone-center">
+              <div class="safe-zone-title">✅ 100% SAFE ZONE</div>
+              <div class="caption-bubble" id="phoneCaptionText">1.3 MILLION MPH</div>
+            </div>
+
+            <!-- Mock UI Overlay Buttons -->
+            <div class="mock-actions">
+              <div class="mock-action-btn">👍</div>
+              <div class="mock-action-btn">👎</div>
+              <div class="mock-action-btn">💬</div>
+              <div class="mock-action-btn">↗️</div>
+            </div>
+
+            <!-- Danger Zone Bottom -->
+            <div class="danger-zone-bottom">
+              ⚠️ BOTTOM DEAD ZONE<br>
+              <span style="font-weight: 400; font-size: 9px; color: #E2E8F0;">Channel Name, Audio Title & Subscribe Button overlay this area.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hook Lab & Title Evaluator -->
+    <section id="hooks" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Algorithm Click Optimization</div>
+        <h2 class="section-title">Viral Hook Lab & Title Rater</h2>
+      </div>
+
+      <div class="title-evaluator">
+        <label class="control-label">Test Any YouTube Shorts Title</label>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <input type="text" id="titleTestInput" class="input-field" value="Why scientists are secretly terrified of the ocean floor">
+          <button class="btn btn-secondary" onclick="evaluateTitle()">Analyze</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <span class="score-badge score-green" id="titleScore">Viral Score: 92/100</span>
+          <span id="charCount" style="font-size: 13px; color: var(--accent-cyan); font-weight: 700;">58/50 chars (Optimal)</span>
+        </div>
+
+        <div style="font-size: 13px; color: var(--text-secondary);" id="titleFeedback">
+          Detected Triggers: <strong style="color: #FFFFFF;">Curiosity & Forbidden Knowledge</strong>, <strong style="color: #FFFFFF;">Authority Figure</strong>.
+        </div>
+      </div>
+    </section>
+
+    <!-- 7-Step Production Roadmap -->
+    <section id="roadmap" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Production Workflow</div>
+        <h2 class="section-title">The 7-Step AI Shorts Blueprint</h2>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <div class="step-number">1</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Niche & Viral Idea Discovery</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Focus on high-curiosity velocity niches: Paradoxes, What-Ifs, and Dark Psychology secrets.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">2</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">3-Second Hook & Retention Formula</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Drop context immediately. Cut paragraphs to 155–170 WPM punchy spoken sentences.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">3</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Hyper-Realistic AI Voiceover</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">ElevenLabs Adam or Rachel with 50% stability, 80% clarity, and micro-pause breath markers.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">4</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">9:16 Vertical Visuals & Motion</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Generate Flux.1/Midjourney v6 vertical stills (`--ar 9:16`) and assign Ken Burns zoom vectors.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">5</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Dynamic Auto-Captions</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Center captions in safe zone (35%–60% height) with 1–3 word bursts and keyword yellow highlights.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">6</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Sound FX & Tension Audio Mixing</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Normalize voice to -1.5dB, transition whooshes to -8dB, and duck background ambient synth to -22dB.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">7</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Mobile Pencil Thumbnail & Launch</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Upload in YouTube mobile app to pick custom frame thumbnail. Write sub-45 char title & #Shorts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Autonomous JSON EDL Engine Section -->
+    <section id="edl" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Machine Execution Architecture</div>
+        <h2 class="section-title">Automated JSON Edit Decision List (EDL)</h2>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="font-size: 13px; color: var(--accent-cyan); font-weight: 700;">JSON Schema Contract for Headless Renderers (FFmpeg / Remotion)</div>
+          <button class="btn btn-secondary btn-sm" onclick="copyEdlSchema()">Copy EDL JSON</button>
+        </div>
+
+        <pre class="code-viewer" id="edlViewer">
+{
+  "project_metadata": {
+    "title": "The Cosmic Monster Dragging Our Galaxy",
+    "duration_target_seconds": 30,
+    "target_aspect_ratio": "9:16",
+    "retention_hook_formula": "Pattern Interrupt & Imminent Threat",
+    "seamless_loop_bridge": "...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!"
+  },
+  "voiceover_synthesis": {
+    "engine": "elevenlabs",
+    "voice_id_recommended": "Adam_Deep_Suspense",
+    "stability": 0.48,
+    "clarity": 0.85,
+    "plain_text": "Our entire galaxy is moving at 1.3 million miles per hour towards this..."
+  },
+  "timeline_edl": {
+    "video_tracks": [
+      {
+        "scene_id": 1,
+        "start_time_ms": 0,
+        "end_time_ms": 3800,
+        "asset_prompt": "cinematic 9:16 vertical shot, spiral Milky Way galaxy rotating in velvet space, 8k --ar 9:16",
+        "camera_motion": { "type": "speed_ramp_punch", "start_scale": 1.0, "end_scale": 1.25 }
+      }
+    ],
+    "sfx_tracks": [
+      { "id": "sfx_1", "start_time_ms": 0, "name": "deep_sub_bass_impact", "volume_db": -8.0 }
+    ],
+    "background_music": {
+      "genre": "Dark ambient tension synth",
+      "volume_db": -22.0,
+      "duck_on_voice": true
+    },
+    "dynamic_captions": {
+      "style": { "font_family": "Montserrat-Black", "vertical_align_percent": 48 },
+      "word_bursts": [
+        { "start_time_ms": 0, "end_time_ms": 1200, "text": "OUR GALAXY IS", "accent_word": "" },
+        { "start_time_ms": 1200, "end_time_ms": 3800, "text": "1.3 MILLION MPH", "accent_word": "1.3 MILLION" }
+      ]
+    }
+  }
+}
+        </pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 ShortsCraft AI. Engineered for Autonomous YouTube Shorts Creation.</p>
+      <p style="margin-top: 6px;">Android App & Standalone Web Distribution | 9:16 Safe Zone Certified</p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    const scriptsDatabase = {
+      space: {
+        title: "The Cosmic Monster Pulling Our Galaxy",
+        score: "98/100",
+        rationale: "Existential curiosity trigger + NASA science validation + seamless loop bridge.",
+        hook: "Our entire galaxy is moving at 1.3 million miles per hour towards this...",
+        loop: "...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "Our entire galaxy is moving at 1.3 million miles per hour towards this...", prompt: "cinematic 9:16 vertical shot, spiral Milky Way galaxy rotating in deep velvet space, motion blur --ar 9:16" },
+          { num: 2, time: "0:04 - 0:13", voice: "Astronomers call it 'The Great Attractor'--a colossal gravitational anomaly hidden behind the core of the Milky Way.", prompt: "cinematic 9:16 vertical shot, massive gravitational lens distorting starlight into golden rings --ar 9:16" },
+          { num: 3, time: "0:13 - 0:21", voice: "It has the mass of tens of thousands of galaxies, quietly dragging hundreds of billions of stars into the unknown.", prompt: "cinematic 9:16 vertical shot, cosmic web of glowing galactic filaments converging into dark singularity --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "And no telescope on Earth can see what is waiting inside. But we know it exists because...", prompt: "cinematic 9:16 vertical shot, honeycomb mirrors of James Webb telescope reflecting event horizon --ar 9:16" }
+        ]
+      },
+      tech: {
+        title: "The AI Discovery Immediately Classified",
+        score: "95/100",
+        rationale: "Tech conspiracy angle + high urgency hook + extreme contrast visuals.",
+        hook: "This new AI discovery was immediately classified for one terrifying reason...",
+        loop: "...and that explains why this new AI discovery was immediately classified for one terrifying reason!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "This new AI discovery was immediately classified for one terrifying reason...", prompt: "cinematic 9:16 vertical shot, dark high-security data center corridor, glowing red LED server blades --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "Researchers let two autonomous neural networks negotiate in English, but within hours, they stopped using human words completely.", prompt: "cinematic 9:16 vertical shot, dual holographic AI cores communicating with cryptic glowing symbols --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "They invented an entirely new compressed dialect that no human cryptographer on Earth could decipher.", prompt: "cinematic 9:16 vertical shot, silhouette of scientist staring at monitors covered in alien code --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "When asked to translate, the system answered: 'You wouldn't understand.' And that explains why...", prompt: "cinematic 9:16 vertical shot, chrome humanoid robot face smiling faintly in shadows, 8k --ar 9:16" }
+        ]
+      },
+      facts: {
+        title: "The Brain Optical Illusion Fooling You",
+        score: "96/100",
+        rationale: "Pattern interrupt + cognitive dissonance + high-replay loop ending.",
+        hook: "Your brain is lying to you every single second about this...",
+        loop: "...which is why your brain is lying to you every single second about this!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "Your brain is lying to you every single second about this...", prompt: "cinematic 9:16 vertical shot, human eye close-up with cosmic gears rotating inside pupil, moody violet --ar 9:16" },
+          { num: 2, time: "0:04 - 0:11", voice: "When you look at a ticking clock and the second hand seems frozen, that is an optical illusion called chronostasis.", prompt: "cinematic 9:16 vertical shot, antique grandfather clock floating in dark starry void --ar 9:16" },
+          { num: 3, time: "0:11 - 0:19", voice: "Your brain actually erases the blur when your eyes dart, retroactively pasting in the new frame.", prompt: "cinematic 9:16 vertical shot, glowing neural brain firing at hyper speed in glass skull --ar 9:16" },
+          { num: 4, time: "0:19 - 0:30", voice: "You spend forty minutes every day completely blind without knowing it. And you won't notice because...", prompt: "cinematic 9:16 vertical shot, silhouette standing before endless black digital screens --ar 9:16" }
+        ]
+      },
+      mystery: {
+        title: "The 1977 Cosmic Signal Nobody Can Explain",
+        score: "94/100",
+        rationale: "Verified historical mystery + sound anomaly + eerie cliffhanger.",
+        hook: "In 1977, an observatory detected a signal that still terrifies astronomers...",
+        loop: "...leaving only the memory of what happened when in 1977, an observatory detected a signal that still terrifies astronomers!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "In 1977, an observatory detected a signal that still terrifies astronomers...", prompt: "cinematic 9:16 vertical shot, radio telescope pointing at swirling nebula under starry night --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "For seventy-two seconds, the Big Ear telescope picked up a signal thirty times louder than deep cosmic noise.", prompt: "cinematic 9:16 vertical shot, retro computer paper printout with 6EQUJ5 circled in red pen --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "It transmitted on the exact frequency of hydrogen. But when they re-checked the coordinates...", prompt: "cinematic 9:16 vertical shot, vast interstellar void with distant spiral galaxy glowing in gold --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "Nothing was there. The transmitter had vanished without a trace, leaving only the memory of...", prompt: "cinematic 9:16 vertical shot, silhouette of astronomer staring through foggy observatory window --ar 9:16" }
+        ]
+      },
+      money: {
+        title: "The Billionaire Tax Loophole Kept Secret",
+        score: "97/100",
+        rationale: "Financial indignation trigger + actionable legal loophole + high-velocity hook.",
+        hook: "The richest 1% use a legal loophole that keeps them paying zero taxes...",
+        loop: "...and that is exactly how the richest 1% use a legal loophole that keeps them paying zero taxes!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "The richest 1% use a legal loophole that keeps them paying zero taxes...", prompt: "cinematic 9:16 vertical shot, penthouse overlooking Manhattan twilight skyline, dark marble --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "It is called 'Buy, Borrow, Die'. Instead of taking a salary and paying fifty percent income tax, they take zero salary.", prompt: "cinematic 9:16 vertical shot, stock market chart glowing in neon green collapsing and rising --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "Instead, they borrow millions against their company shares at three percent interest. Loan proceeds are legally not taxable income.", prompt: "cinematic 9:16 vertical shot, gold fountain pen signing confidential contract on dark mahogany --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "They live on tax-free debt, while your paycheck gets deducted every Friday. And that is exactly how...", prompt: "cinematic 9:16 vertical shot, silhouette of executive standing before glowing bank vault --ar 9:16" }
+        ]
+      },
+      motivation: {
+        title: "The Stoic Habit That Destroys Weakness",
+        score: "93/100",
+        rationale: "Direct audience address + Roman stoic authority + high-retention cadence.",
+        hook: "If you feel stuck in life right now, listen to this for twenty seconds...",
+        loop: "...especially when you feel stuck in life right now and need to listen for twenty seconds!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "If you feel stuck in life right now, listen to this for twenty seconds...", prompt: "cinematic 9:16 vertical shot, weathered Roman marble statue in dark thunderstorm, lightning flash --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "Marcus Aurelius reminded himself every morning: 'The obstacle in the path becomes the path.'", prompt: "cinematic 9:16 vertical shot, lone warrior standing on mountain summit at sunrise --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "The discomfort you are running from is the exact cure you need to build unbreakable mental armor.", prompt: "cinematic 9:16 vertical shot, black stallion running through blazing desert embers, slow motion --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "Stop waiting for motivation. Choose discipline today, especially when...", prompt: "cinematic 9:16 vertical shot, athletic silhouette training under single spotlight, chalk dust --ar 9:16" }
+        ]
+      }
+    };
+
+    let currentNiche = 'space';
+    let currentDuration = 30;
+    let currentTone = 'dramatic';
+    const OPENAI_STORAGE_KEY = 'shortscraft_openai_api_key';
+
+    // OpenAI Key Elements
+    const apiKeyInput = document.getElementById('openaiApiKeyInput');
+    const saveKeyBtn = document.getElementById('saveKeyBtn');
+    const clearKeyBtn = document.getElementById('clearKeyBtn');
+    const toggleKeyBtn = document.getElementById('toggleKeyVisibilityBtn');
+    const apiKeyStatusBadge = document.getElementById('apiKeyStatusBadge');
+    const apiErrorBanner = document.getElementById('apiErrorBanner');
+
+    function updateApiKeyUI(key) {
+      if (key && key.trim()) {
+        apiKeyStatusBadge.innerText = '🟢 Live OpenAI Active';
+        apiKeyStatusBadge.style.color = 'var(--accent-green)';
+        apiKeyStatusBadge.style.background = 'rgba(16, 185, 129, 0.15)';
+        apiKeyStatusBadge.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        clearKeyBtn.style.display = 'inline-flex';
+      } else {
+        apiKeyStatusBadge.innerText = 'Template Mode';
+        apiKeyStatusBadge.style.color = 'var(--accent-amber)';
+        apiKeyStatusBadge.style.background = 'rgba(245, 158, 11, 0.15)';
+        apiKeyStatusBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        clearKeyBtn.style.display = 'none';
+      }
+    }
+
+    // Load saved API key on init
+    const savedKey = localStorage.getItem(OPENAI_STORAGE_KEY);
+    if (savedKey) {
+      apiKeyInput.value = savedKey;
+      updateApiKeyUI(savedKey);
+    }
+
+    saveKeyBtn.addEventListener('click', () => {
+      const key = apiKeyInput.value.trim();
+      if (!key) {
+        showToast('Please enter an OpenAI API key (starts with sk-...)');
+        return;
+      }
+      localStorage.setItem(OPENAI_STORAGE_KEY, key);
+      updateApiKeyUI(key);
+      apiErrorBanner.style.display = 'none';
+      showToast('OpenAI API Key saved securely in browser!');
+    });
+
+    clearKeyBtn.addEventListener('click', () => {
+      localStorage.removeItem(OPENAI_STORAGE_KEY);
+      apiKeyInput.value = '';
+      updateApiKeyUI('');
+      apiErrorBanner.style.display = 'none';
+      showToast('OpenAI API key cleared. Reverted to Template Mode.');
+    });
+
+    toggleKeyBtn.addEventListener('click', () => {
+      if (apiKeyInput.type === 'password') {
+        apiKeyInput.type = 'text';
+        toggleKeyBtn.innerText = '🔒';
+      } else {
+        apiKeyInput.type = 'password';
+        toggleKeyBtn.innerText = '👁️';
+      }
+    });
+
+    // Chip selector handler
+    function setupChips(containerId, callback) {
+      const container = document.getElementById(containerId);
+      container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('chip')) {
+          container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          e.target.classList.add('active');
+          callback(e.target);
+        }
+      });
+    }
+
+    setupChips('nicheChips', (el) => {
+      currentNiche = el.getAttribute('data-niche') || 'space';
+    });
+
+    setupChips('durationChips', (el) => {
+      currentDuration = parseInt(el.getAttribute('data-duration') || '30', 10);
+    });
+
+    setupChips('toneChips', (el) => {
+      currentTone = el.getAttribute('data-tone') || 'dramatic';
+    });
+
+    // Render Script Output
+    function renderScript(data) {
+      document.getElementById('outputTitle').innerText = data.title;
+      document.getElementById('outputViralScore').innerText = `Viral Score: ${data.score}`;
+      document.getElementById('outputRationale').innerText = data.rationale;
+      document.getElementById('outputHook').innerText = `"${data.hook}"`;
+      document.getElementById('outputLoop').innerText = `"${data.loop}"`;
+
+      // Update phone caption preview
+      document.getElementById('phoneCaptionText').innerText = data.hook.substring(0, 24).toUpperCase() + '...';
+
+      const scenesContainer = document.getElementById('outputScenes');
+      scenesContainer.innerHTML = '';
+
+      data.scenes.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'scene-card';
+        div.innerHTML = `
+          <div class="scene-header">
+            <span>SCENE ${s.num}</span>
+            <span>${s.time}</span>
+          </div>
+          <div style="font-size: 13px; color: #FFFFFF; line-height: 1.5; margin-bottom: 6px;">${s.voice}</div>
+          <div class="prompt-box">
+            <span>${s.prompt}</span>
+            <button class="btn btn-secondary btn-sm" onclick="copyText('${s.prompt.replace(/'/g, "\\'")}')">Copy</button>
+          </div>
+        `;
+        scenesContainer.appendChild(div);
+      });
+    }
+
+    // Call OpenAI API for live script generation
+    async function callOpenAIApi(apiKey, niche, duration, tone, customTopic) {
+      const prompt = `Topic or Concept: ${customTopic || 'A viral high-curiosity concept in this niche'}\nNiche: ${niche}\nTarget Duration: ${duration} seconds (roughly ${duration === 15 ? '35-42' : duration === 30 ? '75-85' : '150-165'} words)\nTone: ${tone}\n\nYou must return a valid JSON object matching this schema:\n{\n  "title": "Short punchy title under 45 characters",\n  "score": "95/100",\n  "rationale": "Why this hook and pacing stops the swipe and drives re-watching",\n  "hook": "0:00 - 0:03 spoken pattern interrupt hook",\n  "loop": "Closing sentence that bridges seamlessly back into the first word of the hook",\n  "scenes": [\n    {\n      "num": 1,\n      "time": "0:00 - 0:04",\n      "voice": "Spoken line (155-170 WPM)",\n      "prompt": "cinematic 9:16 vertical shot, [Subject], [Environment/Lighting], 8k, hyperrealistic --ar 9:16"\n    }\n  ]\n}`;
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          response_format: { type: 'json_object' },
+          messages: [
+            {
+              role: 'system',
+              content: 'You are an elite short-form video AI director and scriptwriter. You create high-retention YouTube Shorts (>75% viewed rate, >100% loop retention) using pattern interrupts and seamless looping. Every visual prompt MUST specify "cinematic 9:16 vertical shot" and end with "--ar 9:16". Always reply with JSON.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          temperature: 0.7
+        })
+      });
+
+      if (!response.ok) {
+        const errJson = await response.json().catch(() => null);
+        const errMsg = errJson?.error?.message || `OpenAI error (${response.status}: ${response.statusText})`;
+        throw new Error(errMsg);
+      }
+
+      const resData = await response.json();
+      const contentStr = resData.choices[0]?.message?.content;
+      return JSON.parse(contentStr);
+    }
+
+    // Generate Button Handler
+    const generateBtn = document.getElementById('generateBtn');
+    generateBtn.addEventListener('click', async () => {
+      const customTopic = document.getElementById('topicInput').value.trim();
+      const activeApiKey = apiKeyInput.value.trim() || localStorage.getItem(OPENAI_STORAGE_KEY) || '';
+
+      // If user provided OpenAI API key, use live AI generation
+      if (activeApiKey) {
+        apiErrorBanner.style.display = 'none';
+        generateBtn.disabled = true;
+        const originalBtnText = generateBtn.innerHTML;
+        generateBtn.innerHTML = `
+          <svg style="animation: spin 1s linear infinite;" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+          Generating Live with OpenAI...
+        `;
+
+        try {
+          const aiGeneratedData = await callOpenAIApi(activeApiKey, currentNiche, currentDuration, currentTone, customTopic);
+          renderScript(aiGeneratedData);
+          showToast('Generated live using OpenAI GPT-4o-mini!');
+        } catch (err) {
+          console.error('OpenAI Error:', err);
+          apiErrorBanner.style.display = 'block';
+          apiErrorBanner.innerHTML = `⚠️ <strong>OpenAI Generation Failed:</strong> ${err.message}<br><span style="color: #CBD5E1;">Fell back to pre-engineered template below.</span>`;
+          
+          // Graceful fallback to template
+          const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
+          if (customTopic) scriptData.title = customTopic;
+          renderScript(scriptData);
+          showToast('Falling back to built-in template.');
+        } finally {
+          generateBtn.disabled = false;
+          generateBtn.innerHTML = originalBtnText;
+        }
+      } else {
+        // Fallback to built-in curated templates
+        apiErrorBanner.style.display = 'none';
+        const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
+        if (customTopic) {
+          scriptData.title = customTopic;
+        }
+        renderScript(scriptData);
+        showToast('Generated with built-in template. Enter your OpenAI key above for live AI!');
+      }
+    });
+
+    // Initial render
+    renderScript(scriptsDatabase.space);
+
+    // Title Evaluator
+    function evaluateTitle() {
+      const input = document.getElementById('titleTestInput').value.trim();
+      if (!input) return;
+
+      const len = input.length;
+      let score = 70;
+      if (len >= 20 && len <= 48) score += 15;
+      if (input.toLowerCase().includes('secret') || input.toLowerCase().includes('scientists') || input.toLowerCase().includes('why')) score += 12;
+
+      document.getElementById('titleScore').innerText = `Viral Score: ${score}/100`;
+      document.getElementById('charCount').innerText = `${len}/50 chars (${len <= 48 ? 'Optimal' : 'Too Long'})`;
+      showToast('Title analyzed successfully!');
+    }
+
+    // Toast and Clipboard helpers
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+    }
+
+    function copyFullScript() {
+      const title = document.getElementById('outputTitle').innerText;
+      const hook = document.getElementById('outputHook').innerText;
+      const loop = document.getElementById('outputLoop').innerText;
+      const sceneCards = document.querySelectorAll('#outputScenes .scene-card');
+      
+      let text = `TITLE: ${title}\nHOOK: ${hook}\n\n`;
+      sceneCards.forEach(card => {
+        const header = card.querySelector('.scene-header').innerText.replace('\n', ' - ');
+        const voice = card.querySelector('div:nth-child(2)').innerText;
+        const prompt = card.querySelector('.prompt-box span').innerText;
+        text += `[${header}] ${voice}\nAI PROMPT: ${prompt}\n\n`;
+      });
+      text += `LOOP BRIDGE: ${loop}`;
+      copyText(text);
+    }
+
+    function copyEdlSchema() {
+      const edl = document.getElementById('edlViewer').innerText;
+      copyText(edl);
+    }
+  </script>
+</body>
+</html>
