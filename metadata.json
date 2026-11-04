@@ -1,0 +1,6 @@
+{
+  "name": "ShortsCraft AI",
+  "description": "Complete AI YouTube Shorts creator studio with step-by-step masterclass, viral script generator, storyboard visual prompts, teleprompter pacing coach, and SEO optimizer.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

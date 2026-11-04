@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Vertical Shorts frame -->
+    <path
+        android:pathData="M40,28 L68,28 A10,10 0 0,1 78,38 L78,70 A10,10 0 0,1 68,80 L40,80 A10,10 0 0,1 30,70 L30,38 A10,10 0 0,1 40,28 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:angle="315"
+                android:startColor="#FF0033"
+                android:endColor="#D60029"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+    <!-- Play button triangle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50,44 L64,54 L50,64 Z" />
+    <!-- AI Sparkle star top right -->
+    <path
+        android:fillColor="#FFD700"
+        android:pathData="M76,27 L78,32 L83,34 L78,36 L76,41 L74,36 L69,34 L74,32 Z" />
+    <!-- Mini Sparkle bottom left -->
+    <path
+        android:fillColor="#FF88A5"
+        android:pathData="M28,68 L29.5,71.5 L33,73 L29.5,74.5 L28,78 L26.5,74.5 L23,73 L26.5,71.5 Z" />
+</vector>

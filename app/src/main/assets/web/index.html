@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShortsCraft AI — Autonomous YouTube Shorts Creator & Masterclass Studio</title>
+  <meta name="description" content="All-in-one AI YouTube Shorts creator studio, viral script generator, storyboard visual prompts, teleprompter pacing coach, and complete step-by-step AI video production guide.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0B0A10;
+      --bg-surface: #15141E;
+      --bg-surface-elevated: #1F1D2B;
+      --border-color: #2E2B40;
+      --border-focus: #4F4968;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --accent-red: #FF0033;
+      --accent-red-dark: #CC0029;
+      --accent-red-glow: rgba(255, 0, 51, 0.35);
+      --accent-purple: #8B5CF6;
+      --accent-purple-light: #A78BFA;
+      --accent-cyan: #06B6D4;
+      --accent-amber: #F59E0B;
+      --accent-green: #10B981;
+      --font-display: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background gradient */
+    .ambient-glow {
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 0, 51, 0.15) 0%, rgba(139, 92, 246, 0.1) 40%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Layout Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(11, 10, 16, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 70px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-red-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px var(--accent-red-glow);
+    }
+
+    .brand-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: #FFFFFF;
+    }
+
+    .brand-text {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--accent-red);
+      color: #FFFFFF;
+      box-shadow: 0 4px 20px var(--accent-red-glow);
+    }
+
+    .btn-primary:hover {
+      background: #E6002E;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-focus);
+      background: #252336;
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(255, 0, 51, 0.1);
+      border: 1px solid rgba(255, 0, 51, 0.3);
+      border-radius: 100px;
+      color: #FFA3B4;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 6vw, 64px);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #FFFFFF 30%, var(--accent-red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-size: 18px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent-cyan);
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Two-Column Showcase Section */
+    .section {
+      padding: 70px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent-purple-light);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    /* Card styling */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 28px;
+    }
+
+    /* Interactive Script Studio */
+    .controls-row {
+      margin-bottom: 20px;
+    }
+
+    .control-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      padding: 8px 14px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      color: var(--text-primary);
+    }
+
+    .chip.active {
+      background: var(--accent-red);
+      border-color: var(--accent-red);
+      color: #FFFFFF;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-red);
+    }
+
+    .script-output {
+      margin-top: 24px;
+      padding: 20px;
+      background: #0D0C14;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+    }
+
+    .hook-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(255, 0, 51, 0.2);
+      border: 1px solid var(--accent-red);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: #FFA3B4;
+      margin-bottom: 8px;
+    }
+
+    .scene-card {
+      margin: 12px 0;
+      padding: 14px;
+      background: #141320;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+    }
+
+    .scene-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--accent-purple-light);
+      font-weight: 700;
+    }
+
+    .prompt-box {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #09080E;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 11px;
+      color: #A5F3FC;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 9:16 Smartphone Simulator */
+    .phone-simulator {
+      width: 300px;
+      height: 580px;
+      background: #100F17;
+      border: 3px solid #332F4A;
+      border-radius: 36px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .phone-notch {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 18px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 20;
+    }
+
+    .danger-zone-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 75px;
+      background: rgba(255, 0, 51, 0.35);
+      border-bottom: 1px dashed rgba(255, 0, 51, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #FFA3B4;
+      padding-top: 20px;
+      z-index: 10;
+    }
+
+    .safe-zone-center {
+      position: absolute;
+      top: 35%;
+      left: 10%;
+      right: 10%;
+      height: 140px;
+      border: 2px solid var(--accent-green);
+      background: rgba(16, 185, 129, 0.12);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 12px;
+      z-index: 10;
+    }
+
+    .safe-zone-title {
+      color: var(--accent-green);
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .caption-bubble {
+      background: rgba(0, 0, 0, 0.85);
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: #FFE600;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .danger-zone-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 130px;
+      background: rgba(255, 0, 51, 0.35);
+      border-top: 1px dashed rgba(255, 0, 51, 0.6);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #FFA3B4;
+      z-index: 10;
+    }
+
+    .mock-actions {
+      position: absolute;
+      right: 8px;
+      bottom: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .mock-action-btn {
+      width: 32px;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #FFFFFF;
+    }
+
+    /* Title Evaluator */
+    .title-evaluator {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 28px;
+      margin-top: 40px;
+    }
+
+    .score-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .score-green {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-green);
+      border: 1px solid var(--accent-green);
+    }
+
+    /* 7-Step Masterclass Roadmap */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    .roadmap-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .roadmap-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-purple);
+    }
+
+    .step-number {
+      width: 28px;
+      height: 28px;
+      background: var(--accent-purple);
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+
+    /* Technical Spec & EDL Viewer */
+    .code-viewer {
+      background: #09080E;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 20px;
+      font-family: monospace;
+      font-size: 12px;
+      color: #E2E8F0;
+      max-height: 420px;
+      overflow-y: auto;
+      white-space: pre;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 40px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 80px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--accent-red);
+      color: #FFFFFF;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+      .phone-simulator {
+        margin: 30px auto 0;
+      }
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <!-- Header / Navigation -->
+  <header>
+    <div class="container nav-container">
+      <a href="#" class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <span class="brand-text">ShortsCraft AI</span>
+        <span class="brand-badge">9:16 Studio</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#studio" class="nav-link">Script Studio</a>
+        <a href="#safezone" class="nav-link">Safe Zone Simulator</a>
+        <a href="#hooks" class="nav-link">Hook Lab</a>
+        <a href="#roadmap" class="nav-link">7-Step Blueprint</a>
+        <a href="#edl" class="nav-link">EDL Engine</a>
+      </nav>
+
+      <a href="#studio" class="btn btn-primary btn-sm">Launch Web Studio</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero container">
+      <div class="hero-pill">⚡ Autonomous Viral Shorts Engine</div>
+      <h1 class="hero-title">
+        Automate High-Retention<br><span>YouTube Shorts with AI</span>
+      </h1>
+      <p class="hero-subtitle">
+        The complete architectural studio for short-form creators. Engineer 3-second psychological hooks, 9:16 cinematic visuals, and millisecond-accurate JSON Edit Decision Lists (EDL).
+      </p>
+
+      <div class="hero-actions">
+        <a href="#studio" class="btn btn-primary">Try Interactive Generator</a>
+        <a href="#safezone" class="btn btn-secondary">Inspect 9:16 Safe Zones</a>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value">> 75%</div>
+          <div class="stat-label">Viewed vs. Swiped Rate</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">> 100%</div>
+          <div class="stat-label">Average Loop Retention</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">160 WPM</div>
+          <div class="stat-label">Golden Dialogue Cadence</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">2.5s</div>
+          <div class="stat-label">Max Visual Shift Interval</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Script Studio & Safe Zone Simulator -->
+    <section id="studio" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Interactive AI Studio Demo</div>
+        <h2 class="section-title">Generate High-Retention Scripts & Visuals</h2>
+      </div>
+
+      <div class="showcase-grid">
+        <!-- Interactive Controls & Output -->
+        <div class="card">
+          <div class="controls-row">
+            <label class="control-label">1. Select Viral Niche</label>
+            <div class="chips-group" id="nicheChips">
+              <button class="chip active" data-niche="space">🪐 Cosmic Space</button>
+              <button class="chip" data-niche="tech">🤖 AI & Tech</button>
+              <button class="chip" data-niche="facts">🌌 Mind-Blowing Facts</button>
+              <button class="chip" data-niche="mystery">📜 Dark History</button>
+              <button class="chip" data-niche="money">💰 Wealth Secrets</button>
+              <button class="chip" data-niche="motivation">🦁 Stoic Mindset</button>
+            </div>
+          </div>
+
+          <div class="controls-row" style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+              <label class="control-label">2. Duration</label>
+              <div class="chips-group" id="durationChips">
+                <button class="chip" data-duration="15">15s (Loop)</button>
+                <button class="chip active" data-duration="30">30s (Sweet Spot)</button>
+                <button class="chip" data-duration="60">60s (Story)</button>
+              </div>
+            </div>
+
+            <div style="flex: 1;">
+              <label class="control-label">3. Tone</label>
+              <div class="chips-group" id="toneChips">
+                <button class="chip active" data-tone="dramatic">⚡ Dramatic</button>
+                <button class="chip" data-tone="mysterious">👁️ Mystery</button>
+                <button class="chip" data-tone="energy">🔥 High Energy</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="controls-row">
+            <label class="control-label">4. Custom Topic or Angle (Optional)</label>
+            <input type="text" id="topicInput" class="input-field" placeholder="e.g. The Great Attractor pulling our galaxy, or leave blank for AI trend">
+          </div>
+
+          <button id="generateBtn" class="btn btn-primary" style="width: 100%; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/></svg>
+            Generate Viral 9:16 Shorts Script
+          </button>
+
+          <!-- Generated Script Output -->
+          <div class="script-output" id="scriptOutput">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="hook-badge" id="outputViralScore">Viral Score: 96/100</span>
+              <button class="btn btn-secondary btn-sm" onclick="copyFullScript()">Copy Full Script</button>
+            </div>
+
+            <h3 id="outputTitle" style="font-family: var(--font-display); font-size: 18px; margin-bottom: 8px;">The Cosmic Monster Dragging Our Galaxy</h3>
+            <p id="outputRationale" style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">Pattern interrupt + cosmic existential threat trigger + seamless loop bridge.</p>
+
+            <div style="padding: 12px; background: rgba(255, 0, 51, 0.1); border: 1px solid var(--accent-red); border-radius: 8px; margin-bottom: 14px;">
+              <div style="font-size: 10px; font-weight: 800; color: #FFA3B4; text-transform: uppercase;">0:00 - 0:03 THE HOOK (Must Stop The Swipe)</div>
+              <div id="outputHook" style="font-weight: 700; font-size: 14px; margin-top: 4px; color: #FFFFFF;">"Our entire galaxy is moving at 1.3 million miles per hour towards this..."</div>
+            </div>
+
+            <div id="outputScenes"></div>
+
+            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--accent-green); border-radius: 8px; margin-top: 14px;">
+              <div style="font-size: 10px; font-weight: 800; color: var(--accent-green); text-transform: uppercase;">The Seamless Loop Trick</div>
+              <div id="outputLoop" style="font-size: 13px; font-weight: 600; color: #E2E8F0; margin-top: 4px;">"...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!"</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:16 Smartphone Safe Zone Simulator -->
+        <div id="safezone">
+          <div style="text-align: center; margin-bottom: 16px;">
+            <div style="font-size: 12px; font-weight: 700; color: var(--accent-cyan);">9:16 UI COLLISION TESTER</div>
+            <div style="font-size: 13px; color: var(--text-secondary);">Verify Subtitle Placement</div>
+          </div>
+
+          <div class="phone-simulator">
+            <div class="phone-notch"></div>
+
+            <!-- Danger Zone Top -->
+            <div class="danger-zone-top">
+              ⚠️ TOP DEAD ZONE<br>(Search & Audio Bar)
+            </div>
+
+            <!-- Center Safe Zone -->
+            <div class="safe-zone-center">
+              <div class="safe-zone-title">✅ 100% SAFE ZONE</div>
+              <div class="caption-bubble" id="phoneCaptionText">1.3 MILLION MPH</div>
+            </div>
+
+            <!-- Mock UI Overlay Buttons -->
+            <div class="mock-actions">
+              <div class="mock-action-btn">👍</div>
+              <div class="mock-action-btn">👎</div>
+              <div class="mock-action-btn">💬</div>
+              <div class="mock-action-btn">↗️</div>
+            </div>
+
+            <!-- Danger Zone Bottom -->
+            <div class="danger-zone-bottom">
+              ⚠️ BOTTOM DEAD ZONE<br>
+              <span style="font-weight: 400; font-size: 9px; color: #E2E8F0;">Channel Name, Audio Title & Subscribe Button overlay this area.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hook Lab & Title Evaluator -->
+    <section id="hooks" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Algorithm Click Optimization</div>
+        <h2 class="section-title">Viral Hook Lab & Title Rater</h2>
+      </div>
+
+      <div class="title-evaluator">
+        <label class="control-label">Test Any YouTube Shorts Title</label>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <input type="text" id="titleTestInput" class="input-field" value="Why scientists are secretly terrified of the ocean floor">
+          <button class="btn btn-secondary" onclick="evaluateTitle()">Analyze</button>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <span class="score-badge score-green" id="titleScore">Viral Score: 92/100</span>
+          <span id="charCount" style="font-size: 13px; color: var(--accent-cyan); font-weight: 700;">58/50 chars (Optimal)</span>
+        </div>
+
+        <div style="font-size: 13px; color: var(--text-secondary);" id="titleFeedback">
+          Detected Triggers: <strong style="color: #FFFFFF;">Curiosity & Forbidden Knowledge</strong>, <strong style="color: #FFFFFF;">Authority Figure</strong>.
+        </div>
+      </div>
+    </section>
+
+    <!-- 7-Step Production Roadmap -->
+    <section id="roadmap" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Production Workflow</div>
+        <h2 class="section-title">The 7-Step AI Shorts Blueprint</h2>
+      </div>
+
+      <div class="roadmap-grid">
+        <div class="roadmap-card">
+          <div class="step-number">1</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Niche & Viral Idea Discovery</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Focus on high-curiosity velocity niches: Paradoxes, What-Ifs, and Dark Psychology secrets.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">2</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">3-Second Hook & Retention Formula</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Drop context immediately. Cut paragraphs to 155–170 WPM punchy spoken sentences.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">3</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Hyper-Realistic AI Voiceover</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">ElevenLabs Adam or Rachel with 50% stability, 80% clarity, and micro-pause breath markers.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">4</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">9:16 Vertical Visuals & Motion</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Generate Flux.1/Midjourney v6 vertical stills (`--ar 9:16`) and assign Ken Burns zoom vectors.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">5</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Dynamic Auto-Captions</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Center captions in safe zone (35%–60% height) with 1–3 word bursts and keyword yellow highlights.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">6</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Sound FX & Tension Audio Mixing</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Normalize voice to -1.5dB, transition whooshes to -8dB, and duck background ambient synth to -22dB.</p>
+        </div>
+
+        <div class="roadmap-card">
+          <div class="step-number">7</div>
+          <h3 style="font-size: 16px; margin-bottom: 6px;">Mobile Pencil Thumbnail & Launch</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Upload in YouTube mobile app to pick custom frame thumbnail. Write sub-45 char title & #Shorts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Autonomous JSON EDL Engine Section -->
+    <section id="edl" class="section container">
+      <div class="section-header">
+        <div class="section-tag">Machine Execution Architecture</div>
+        <h2 class="section-title">Automated JSON Edit Decision List (EDL)</h2>
+      </div>
+
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="font-size: 13px; color: var(--accent-cyan); font-weight: 700;">JSON Schema Contract for Headless Renderers (FFmpeg / Remotion)</div>
+          <button class="btn btn-secondary btn-sm" onclick="copyEdlSchema()">Copy EDL JSON</button>
+        </div>
+
+        <pre class="code-viewer" id="edlViewer">
+{
+  "project_metadata": {
+    "title": "The Cosmic Monster Dragging Our Galaxy",
+    "duration_target_seconds": 30,
+    "target_aspect_ratio": "9:16",
+    "retention_hook_formula": "Pattern Interrupt & Imminent Threat",
+    "seamless_loop_bridge": "...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!"
+  },
+  "voiceover_synthesis": {
+    "engine": "elevenlabs",
+    "voice_id_recommended": "Adam_Deep_Suspense",
+    "stability": 0.48,
+    "clarity": 0.85,
+    "plain_text": "Our entire galaxy is moving at 1.3 million miles per hour towards this..."
+  },
+  "timeline_edl": {
+    "video_tracks": [
+      {
+        "scene_id": 1,
+        "start_time_ms": 0,
+        "end_time_ms": 3800,
+        "asset_prompt": "cinematic 9:16 vertical shot, spiral Milky Way galaxy rotating in velvet space, 8k --ar 9:16",
+        "camera_motion": { "type": "speed_ramp_punch", "start_scale": 1.0, "end_scale": 1.25 }
+      }
+    ],
+    "sfx_tracks": [
+      { "id": "sfx_1", "start_time_ms": 0, "name": "deep_sub_bass_impact", "volume_db": -8.0 }
+    ],
+    "background_music": {
+      "genre": "Dark ambient tension synth",
+      "volume_db": -22.0,
+      "duck_on_voice": true
+    },
+    "dynamic_captions": {
+      "style": { "font_family": "Montserrat-Black", "vertical_align_percent": 48 },
+      "word_bursts": [
+        { "start_time_ms": 0, "end_time_ms": 1200, "text": "OUR GALAXY IS", "accent_word": "" },
+        { "start_time_ms": 1200, "end_time_ms": 3800, "text": "1.3 MILLION MPH", "accent_word": "1.3 MILLION" }
+      ]
+    }
+  }
+}
+        </pre>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2026 ShortsCraft AI. Engineered for Autonomous YouTube Shorts Creation.</p>
+      <p style="margin-top: 6px;">Android App & Standalone Web Distribution | 9:16 Safe Zone Certified</p>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    const scriptsDatabase = {
+      space: {
+        title: "The Cosmic Monster Pulling Our Galaxy",
+        score: "98/100",
+        rationale: "Existential curiosity trigger + NASA science validation + seamless loop bridge.",
+        hook: "Our entire galaxy is moving at 1.3 million miles per hour towards this...",
+        loop: "...and that is because our entire galaxy is moving at 1.3 million miles per hour towards this!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "Our entire galaxy is moving at 1.3 million miles per hour towards this...", prompt: "cinematic 9:16 vertical shot, spiral Milky Way galaxy rotating in deep velvet space, motion blur --ar 9:16" },
+          { num: 2, time: "0:04 - 0:13", voice: "Astronomers call it 'The Great Attractor'--a colossal gravitational anomaly hidden behind the core of the Milky Way.", prompt: "cinematic 9:16 vertical shot, massive gravitational lens distorting starlight into golden rings --ar 9:16" },
+          { num: 3, time: "0:13 - 0:21", voice: "It has the mass of tens of thousands of galaxies, quietly dragging hundreds of billions of stars into the unknown.", prompt: "cinematic 9:16 vertical shot, cosmic web of glowing galactic filaments converging into dark singularity --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "And no telescope on Earth can see what is waiting inside. But we know it exists because...", prompt: "cinematic 9:16 vertical shot, honeycomb mirrors of James Webb telescope reflecting event horizon --ar 9:16" }
+        ]
+      },
+      tech: {
+        title: "The AI Discovery Immediately Classified",
+        score: "95/100",
+        rationale: "Tech conspiracy angle + high urgency hook + extreme contrast visuals.",
+        hook: "This new AI discovery was immediately classified for one terrifying reason...",
+        loop: "...and that explains why this new AI discovery was immediately classified for one terrifying reason!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "This new AI discovery was immediately classified for one terrifying reason...", prompt: "cinematic 9:16 vertical shot, dark high-security data center corridor, glowing red LED server blades --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "Researchers let two autonomous neural networks negotiate in English, but within hours, they stopped using human words completely.", prompt: "cinematic 9:16 vertical shot, dual holographic AI cores communicating with cryptic glowing symbols --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "They invented an entirely new compressed dialect that no human cryptographer on Earth could decipher.", prompt: "cinematic 9:16 vertical shot, silhouette of scientist staring at monitors covered in alien code --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "When asked to translate, the system answered: 'You wouldn't understand.' And that explains why...", prompt: "cinematic 9:16 vertical shot, chrome humanoid robot face smiling faintly in shadows, 8k --ar 9:16" }
+        ]
+      },
+      facts: {
+        title: "The Brain Optical Illusion Fooling You",
+        score: "96/100",
+        rationale: "Pattern interrupt + cognitive dissonance + high-replay loop ending.",
+        hook: "Your brain is lying to you every single second about this...",
+        loop: "...which is why your brain is lying to you every single second about this!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "Your brain is lying to you every single second about this...", prompt: "cinematic 9:16 vertical shot, human eye close-up with cosmic gears rotating inside pupil, moody violet --ar 9:16" },
+          { num: 2, time: "0:04 - 0:11", voice: "When you look at a ticking clock and the second hand seems frozen, that is an optical illusion called chronostasis.", prompt: "cinematic 9:16 vertical shot, antique grandfather clock floating in dark starry void --ar 9:16" },
+          { num: 3, time: "0:11 - 0:19", voice: "Your brain actually erases the blur when your eyes dart, retroactively pasting in the new frame.", prompt: "cinematic 9:16 vertical shot, glowing neural brain firing at hyper speed in glass skull --ar 9:16" },
+          { num: 4, time: "0:19 - 0:30", voice: "You spend forty minutes every day completely blind without knowing it. And you won't notice because...", prompt: "cinematic 9:16 vertical shot, silhouette standing before endless black digital screens --ar 9:16" }
+        ]
+      },
+      mystery: {
+        title: "The 1977 Cosmic Signal Nobody Can Explain",
+        score: "94/100",
+        rationale: "Verified historical mystery + sound anomaly + eerie cliffhanger.",
+        hook: "In 1977, an observatory detected a signal that still terrifies astronomers...",
+        loop: "...leaving only the memory of what happened when in 1977, an observatory detected a signal that still terrifies astronomers!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "In 1977, an observatory detected a signal that still terrifies astronomers...", prompt: "cinematic 9:16 vertical shot, radio telescope pointing at swirling nebula under starry night --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "For seventy-two seconds, the Big Ear telescope picked up a signal thirty times louder than deep cosmic noise.", prompt: "cinematic 9:16 vertical shot, retro computer paper printout with 6EQUJ5 circled in red pen --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "It transmitted on the exact frequency of hydrogen. But when they re-checked the coordinates...", prompt: "cinematic 9:16 vertical shot, vast interstellar void with distant spiral galaxy glowing in gold --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "Nothing was there. The transmitter had vanished without a trace, leaving only the memory of...", prompt: "cinematic 9:16 vertical shot, silhouette of astronomer staring through foggy observatory window --ar 9:16" }
+        ]
+      },
+      money: {
+        title: "The Billionaire Tax Loophole Kept Secret",
+        score: "97/100",
+        rationale: "Financial indignation trigger + actionable legal loophole + high-velocity hook.",
+        hook: "The richest 1% use a legal loophole that keeps them paying zero taxes...",
+        loop: "...and that is exactly how the richest 1% use a legal loophole that keeps them paying zero taxes!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "The richest 1% use a legal loophole that keeps them paying zero taxes...", prompt: "cinematic 9:16 vertical shot, penthouse overlooking Manhattan twilight skyline, dark marble --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "It is called 'Buy, Borrow, Die'. Instead of taking a salary and paying fifty percent income tax, they take zero salary.", prompt: "cinematic 9:16 vertical shot, stock market chart glowing in neon green collapsing and rising --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "Instead, they borrow millions against their company shares at three percent interest. Loan proceeds are legally not taxable income.", prompt: "cinematic 9:16 vertical shot, gold fountain pen signing confidential contract on dark mahogany --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "They live on tax-free debt, while your paycheck gets deducted every Friday. And that is exactly how...", prompt: "cinematic 9:16 vertical shot, silhouette of executive standing before glowing bank vault --ar 9:16" }
+        ]
+      },
+      motivation: {
+        title: "The Stoic Habit That Destroys Weakness",
+        score: "93/100",
+        rationale: "Direct audience address + Roman stoic authority + high-retention cadence.",
+        hook: "If you feel stuck in life right now, listen to this for twenty seconds...",
+        loop: "...especially when you feel stuck in life right now and need to listen for twenty seconds!",
+        scenes: [
+          { num: 1, time: "0:00 - 0:04", voice: "If you feel stuck in life right now, listen to this for twenty seconds...", prompt: "cinematic 9:16 vertical shot, weathered Roman marble statue in dark thunderstorm, lightning flash --ar 9:16" },
+          { num: 2, time: "0:04 - 0:12", voice: "Marcus Aurelius reminded himself every morning: 'The obstacle in the path becomes the path.'", prompt: "cinematic 9:16 vertical shot, lone warrior standing on mountain summit at sunrise --ar 9:16" },
+          { num: 3, time: "0:12 - 0:21", voice: "The discomfort you are running from is the exact cure you need to build unbreakable mental armor.", prompt: "cinematic 9:16 vertical shot, black stallion running through blazing desert embers, slow motion --ar 9:16" },
+          { num: 4, time: "0:21 - 0:30", voice: "Stop waiting for motivation. Choose discipline today, especially when...", prompt: "cinematic 9:16 vertical shot, athletic silhouette training under single spotlight, chalk dust --ar 9:16" }
+        ]
+      }
+    };
+
+    let currentNiche = 'space';
+
+    // Chip selector handler
+    function setupChips(containerId, callback) {
+      const container = document.getElementById(containerId);
+      container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('chip')) {
+          container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+          e.target.classList.add('active');
+          callback(e.target);
+        }
+      });
+    }
+
+    setupChips('nicheChips', (el) => {
+      currentNiche = el.getAttribute('data-niche');
+    });
+
+    setupChips('durationChips', () => {});
+    setupChips('toneChips', () => {});
+
+    // Render Script Output
+    function renderScript(data) {
+      document.getElementById('outputTitle').innerText = data.title;
+      document.getElementById('outputViralScore').innerText = `Viral Score: ${data.score}`;
+      document.getElementById('outputRationale').innerText = data.rationale;
+      document.getElementById('outputHook').innerText = `"${data.hook}"`;
+      document.getElementById('outputLoop').innerText = `"${data.loop}"`;
+
+      // Update phone caption preview
+      document.getElementById('phoneCaptionText').innerText = data.hook.substring(0, 24).toUpperCase() + '...';
+
+      const scenesContainer = document.getElementById('outputScenes');
+      scenesContainer.innerHTML = '';
+
+      data.scenes.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'scene-card';
+        div.innerHTML = `
+          <div class="scene-header">
+            <span>SCENE ${s.num}</span>
+            <span>${s.time}</span>
+          </div>
+          <div style="font-size: 13px; color: #FFFFFF; line-height: 1.5; margin-bottom: 6px;">${s.voice}</div>
+          <div class="prompt-box">
+            <span>${s.prompt}</span>
+            <button class="btn btn-secondary btn-sm" onclick="copyText('${s.prompt.replace(/'/g, "\\'")}')">Copy</button>
+          </div>
+        `;
+        scenesContainer.appendChild(div);
+      });
+    }
+
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const customTopic = document.getElementById('topicInput').value.trim();
+      const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
+
+      if (customTopic) {
+        scriptData.title = customTopic;
+      }
+      renderScript(scriptData);
+      showToast('Generated 9:16 Shorts Script & Visual Prompts!');
+    });
+
+    // Initial render
+    renderScript(scriptsDatabase.space);
+
+    // Title Evaluator
+    function evaluateTitle() {
+      const input = document.getElementById('titleTestInput').value.trim();
+      if (!input) return;
+
+      const len = input.length;
+      let score = 70;
+      if (len >= 20 && len <= 48) score += 15;
+      if (input.toLowerCase().includes('secret') || input.toLowerCase().includes('scientists') || input.toLowerCase().includes('why')) score += 12;
+
+      document.getElementById('titleScore').innerText = `Viral Score: ${score}/100`;
+      document.getElementById('charCount').innerText = `${len}/50 chars (${len <= 48 ? 'Optimal' : 'Too Long'})`;
+      showToast('Title analyzed successfully!');
+    }
+
+    // Toast and Clipboard helpers
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+    }
+
+    function copyFullScript() {
+      const data = scriptsDatabase[currentNiche];
+      const text = `TITLE: ${data.title}\nHOOK: ${data.hook}\n\n` +
+        data.scenes.map(s => `[${s.time}] ${s.voice}\nPROMPT: ${s.prompt}`).join('\n\n') +
+        `\n\nLOOP BRIDGE: ${data.loop}`;
+      copyText(text);
+    }
+
+    function copyEdlSchema() {
+      const edl = document.getElementById('edlViewer').innerText;
+      copyText(edl);
+    }
+  </script>
+</body>
+</html>
