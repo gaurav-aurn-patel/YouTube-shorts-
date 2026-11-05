@@ -1226,9 +1226,181 @@
       });
     }
 
+    // Dynamic script generator for custom topics
+    function generateDynamicScript(topic, niche, duration, tone) {
+      const cleanTopic = topic.trim();
+      const displayTitle = cleanTopic.length > 44 ? cleanTopic.substring(0, 41) + '...' : cleanTopic;
+
+      // Tone-specific vocabulary and visual aesthetics
+      const toneMap = {
+        dramatic: {
+          hookLead: "Almost nobody understands what actually happened with",
+          bridgeLead: "and that is the exact reason why almost nobody understands what actually happened with",
+          twist: "Deep inside the confidential data, researchers uncovered an anomaly that breaks every standard rule.",
+          implication: "If this continues unchecked, everything we took for granted shifts in an instant.",
+          visualVibe: "dark moody volumetric lighting, deep violet and crimson shadows, high cinematic contrast, dramatic rim lighting"
+        },
+        educational: {
+          hookLead: "You have been told the exact opposite your whole life about",
+          bridgeLead: "which proves you have been told the exact opposite your whole life about",
+          twist: "When you analyze the actual empirical data, the common assumption completely falls apart.",
+          implication: "This single counter-intuitive mechanism explains why 99% of people misunderstand what is really going on.",
+          visualVibe: "clean hyperrealistic studio lighting, luminous cyan and amber holographic data overlays, 8k octane render"
+        },
+        urgent: {
+          hookLead: "Stop scrolling right now if you haven't seen the truth about",
+          bridgeLead: "which is why you must stop scrolling right now if you haven't seen the truth about",
+          twist: "Critical evidence surfaced in the last 48 hours that experts are urgently trying to decipher.",
+          implication: "The window of opportunity to understand this is closing faster than anyone anticipated.",
+          visualVibe: "high-velocity dynamic camera push, flashing emergency amber beacons, intense anamorphic lens flare"
+        },
+        humorous: {
+          hookLead: "The wildest, most absurd thing humans never noticed about",
+          bridgeLead: "and that is the wildest, most absurd thing humans never noticed about",
+          twist: "You literally cannot make this up: the actual explanation sounds like an impossible parody.",
+          implication: "Once you see this once, you will never be able to look at normal life the same way again.",
+          visualVibe: "hyper-saturated vibrant colors, whimsical high-key lighting, surreal photorealistic details, playful depth of field"
+        },
+        inspiring: {
+          hookLead: "If you feel exhausted today, this single truth about",
+          bridgeLead: "and that is why if you feel exhausted today, this single truth about",
+          twist: "History proves that the most resilient breakthroughs always emerged through this exact crucible.",
+          implication: "Every barrier you encounter right now is building the exact armor you need for what comes next.",
+          visualVibe: "golden hour cinematic sunrise rays, ethereal atmospheric mist, heroic low-angle silhouette, 8k photorealistic"
+        }
+      };
+
+      const currentT = toneMap[tone] || toneMap.dramatic;
+      const hook = `${currentT.hookLead} ${cleanTopic}...`;
+      const loop = `...${currentT.bridgeLead} ${cleanTopic}!`;
+      const rationale = `Topic-driven pattern interrupt (${cleanTopic}) + ${tone} pacing cadence + seamless retention loop bridge.`;
+
+      let scenes = [];
+      if (duration === 15) {
+        scenes = [
+          {
+            num: 1,
+            time: "0:00 - 0:04",
+            voice: `${currentT.hookLead} ${cleanTopic}...`,
+            prompt: `cinematic 9:16 vertical shot, dramatic macro shot capturing ${cleanTopic}, ${currentT.visualVibe}, hyperrealistic, 8k --ar 9:16`
+          },
+          {
+            num: 2,
+            time: "0:04 - 0:10",
+            voice: `${currentT.twist} ${cleanTopic} isn't behaving normally—it triggers an immediate chain reaction.`,
+            prompt: `cinematic 9:16 vertical shot, dynamic cross-section revealing the inner mechanism of ${cleanTopic}, glowing particles, ${currentT.visualVibe} --ar 9:16`
+          },
+          {
+            num: 3,
+            time: "0:10 - 0:15",
+            voice: `And when you realize what this really means, you understand why...`,
+            prompt: `cinematic 9:16 vertical shot, breathtaking wide perspective framing ${cleanTopic} against an infinite horizon, moody cinematic rim light --ar 9:16`
+          }
+        ];
+      } else if (duration === 60) {
+        scenes = [
+          {
+            num: 1,
+            time: "0:00 - 0:04",
+            voice: `${currentT.hookLead} ${cleanTopic}...`,
+            prompt: `cinematic 9:16 vertical shot, dramatic high-tension close-up of ${cleanTopic}, ${currentT.visualVibe}, hyperrealistic, 8k --ar 9:16`
+          },
+          {
+            num: 2,
+            time: "0:04 - 0:16",
+            voice: `For years, everyone assumed ${cleanTopic} was straightforward. But secret tests revealed an anomaly that defies standard logic.`,
+            prompt: `cinematic 9:16 vertical shot, futuristic laboratory analysis of ${cleanTopic}, floating holographic diagnostics and data streams --ar 9:16`
+          },
+          {
+            num: 3,
+            time: "0:16 - 0:30",
+            voice: `${currentT.twist} When experts pushed ${cleanTopic} to its absolute limits, the readings spiked thirty times higher than expected.`,
+            prompt: `cinematic 9:16 vertical shot, intense kinetic camera zoom through the core of ${cleanTopic}, sparks and volumetric energy waves --ar 9:16`
+          },
+          {
+            num: 4,
+            time: "0:30 - 0:45",
+            voice: `${currentT.implication} That is why top industry insiders have been quietly restructuring everything around ${cleanTopic}.`,
+            prompt: `cinematic 9:16 vertical shot, silhouette of mastermind strategist standing before high-resolution monitors displaying ${cleanTopic} global metrics --ar 9:16`
+          },
+          {
+            num: 5,
+            time: "0:45 - 0:60",
+            voice: `The real question isn't if this changes the future, but whether you will be ready before...`,
+            prompt: `cinematic 9:16 vertical shot, epic cinematic pullback shot of ${cleanTopic} standing triumphant under starry skies, 8k --ar 9:16`
+          }
+        ];
+      } else {
+        // Default 30s
+        scenes = [
+          {
+            num: 1,
+            time: "0:00 - 0:04",
+            voice: `${currentT.hookLead} ${cleanTopic}...`,
+            prompt: `cinematic 9:16 vertical shot, extreme close-up of ${cleanTopic}, ${currentT.visualVibe}, 8k photorealistic octane render --ar 9:16`
+          },
+          {
+            num: 2,
+            time: "0:04 - 0:12",
+            voice: `Everyone thought ${cleanTopic} was just another normal concept, until researchers documented what actually happens behind closed doors.`,
+            prompt: `cinematic 9:16 vertical shot, high-tech inspection of ${cleanTopic}, cinematic neon rim lighting, floating dust particles in volumetric beam --ar 9:16`
+          },
+          {
+            num: 3,
+            time: "0:12 - 0:21",
+            voice: `${currentT.twist} It completely rewrites how we understand the entire mechanism of ${cleanTopic}.`,
+            prompt: `cinematic 9:16 vertical shot, surreal visual metaphor representing ${cleanTopic} transforming, dynamic motion blur, 8k --ar 9:16`
+          },
+          {
+            num: 4,
+            time: "0:21 - 0:30",
+            voice: `${currentT.implication} And that single revelation is what makes people realize...`,
+            prompt: `cinematic 9:16 vertical shot, heroic silhouette standing before a majestic skyline backdrop, cinematic lens flare, ${cleanTopic} theme --ar 9:16`
+          }
+        ];
+      }
+
+      return {
+        title: displayTitle,
+        score: "96/100",
+        rationale: rationale,
+        hook: hook,
+        loop: loop,
+        scenes: scenes
+      };
+    }
+
     // Call OpenAI API for live script generation
     async function callOpenAIApi(apiKey, niche, duration, tone, customTopic) {
-      const prompt = `Topic or Concept: ${customTopic || 'A viral high-curiosity concept in this niche'}\nNiche: ${niche}\nTarget Duration: ${duration} seconds (roughly ${duration === 15 ? '35-42' : duration === 30 ? '75-85' : '150-165'} words)\nTone: ${tone}\n\nYou must return a valid JSON object matching this schema:\n{\n  "title": "Short punchy title under 45 characters",\n  "score": "95/100",\n  "rationale": "Why this hook and pacing stops the swipe and drives re-watching",\n  "hook": "0:00 - 0:03 spoken pattern interrupt hook",\n  "loop": "Closing sentence that bridges seamlessly back into the first word of the hook",\n  "scenes": [\n    {\n      "num": 1,\n      "time": "0:00 - 0:04",\n      "voice": "Spoken line (155-170 WPM)",\n      "prompt": "cinematic 9:16 vertical shot, [Subject], [Environment/Lighting], 8k, hyperrealistic --ar 9:16"\n    }\n  ]\n}`;
+      const topicToUse = customTopic || 'A viral high-curiosity concept in this niche';
+      const prompt = `TOPIC: "${topicToUse}"
+NICHE: ${niche}
+TARGET DURATION: ${duration} seconds (roughly ${duration === 15 ? '35-42' : duration === 30 ? '75-85' : '150-165'} words, ${duration === 15 ? '3 scenes' : duration === 30 ? '4 scenes' : '5 scenes'})
+TONE: ${tone}
+
+CRITICAL INSTRUCTIONS:
+- The script MUST be 100% focused on "${topicToUse}". Do NOT output a generic script.
+- The hook MUST directly hook the viewer on "${topicToUse}" within the first 3 seconds.
+- Every single scene voiceover MUST explain, reveal secrets, or describe "${topicToUse}".
+- Every scene prompt MUST be a "cinematic 9:16 vertical shot" depicting the visual subject of "${topicToUse}" with lighting and camera motion, ending with "--ar 9:16".
+- The loop MUST seamlessly connect the final words back into the first word of the hook.
+
+Return a valid JSON object matching this schema:
+{
+  "title": "Short punchy title under 45 characters specifically about ${topicToUse}",
+  "score": "95/100",
+  "rationale": "Why this hook and pacing stops the swipe for this specific topic",
+  "hook": "0:00 - 0:04 spoken pattern interrupt hook",
+  "loop": "Closing sentence that bridges seamlessly back into the first word of the hook",
+  "scenes": [
+    {
+      "num": 1,
+      "time": "0:00 - 0:04",
+      "voice": "Spoken line specifically about ${topicToUse} (155-170 WPM)",
+      "prompt": "cinematic 9:16 vertical shot, [detailed visual of ${topicToUse}], 8k, hyperrealistic --ar 9:16"
+    }
+  ]
+}`;
 
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -1242,7 +1414,7 @@
           messages: [
             {
               role: 'system',
-              content: 'You are an elite short-form video AI director and scriptwriter. You create high-retention YouTube Shorts (>75% viewed rate, >100% loop retention) using pattern interrupts and seamless looping. Every visual prompt MUST specify "cinematic 9:16 vertical shot" and end with "--ar 9:16". Always reply with JSON.'
+              content: 'You are an elite short-form video AI director and scriptwriter. You create high-retention YouTube Shorts (>75% viewed rate, >100% loop retention) using pattern interrupts, dynamic storytelling, and seamless looping. Every script you generate must be tailored dynamically and deeply to the user-specified topic. Every visual prompt MUST specify "cinematic 9:16 vertical shot" and end with "--ar 9:16". Always reply with JSON.'
             },
             {
               role: 'user',
@@ -1283,30 +1455,34 @@
         try {
           const aiGeneratedData = await callOpenAIApi(activeApiKey, currentNiche, currentDuration, currentTone, customTopic);
           renderScript(aiGeneratedData);
-          showToast('Generated live using OpenAI GPT-4o-mini!');
+          showToast(customTopic ? `Generated live script for "${customTopic}" with OpenAI!` : 'Generated live with OpenAI GPT-4o-mini!');
         } catch (err) {
           console.error('OpenAI Error:', err);
           apiErrorBanner.style.display = 'block';
-          apiErrorBanner.innerHTML = `⚠️ <strong>OpenAI Generation Failed:</strong> ${err.message}<br><span style="color: #CBD5E1;">Fell back to pre-engineered template below.</span>`;
+          apiErrorBanner.innerHTML = `⚠️ <strong>OpenAI Generation Failed:</strong> ${err.message}<br><span style="color: #CBD5E1;">Fell back to dynamic local script generator below.</span>`;
           
-          // Graceful fallback to template
-          const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
-          if (customTopic) scriptData.title = customTopic;
+          // Graceful fallback to dynamic custom topic generation
+          const scriptData = customTopic 
+            ? generateDynamicScript(customTopic, currentNiche, currentDuration, currentTone)
+            : (scriptsDatabase[currentNiche] || scriptsDatabase.space);
           renderScript(scriptData);
-          showToast('Falling back to built-in template.');
+          showToast(customTopic ? `Generated dynamic script for "${customTopic}" (Fallback)!` : 'Fell back to built-in template.');
         } finally {
           generateBtn.disabled = false;
           generateBtn.innerHTML = originalBtnText;
         }
       } else {
-        // Fallback to built-in curated templates
+        // Built-in Dynamic Generator: dynamically generates from custom topic if present
         apiErrorBanner.style.display = 'none';
-        const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
         if (customTopic) {
-          scriptData.title = customTopic;
+          const scriptData = generateDynamicScript(customTopic, currentNiche, currentDuration, currentTone);
+          renderScript(scriptData);
+          showToast(`Generated custom dynamic script for "${customTopic}"!`);
+        } else {
+          const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
+          renderScript(scriptData);
+          showToast('Generated curated template. Enter a custom topic above for dynamic generation!');
         }
-        renderScript(scriptData);
-        showToast('Generated with built-in template. Enter your OpenAI key above for live AI!');
       }
     });
 

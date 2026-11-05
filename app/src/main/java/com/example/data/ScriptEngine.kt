@@ -16,7 +16,10 @@ object ScriptEngine {
     tone: ScriptTone,
     customTopic: String = ""
   ): GeneratedShortsScript {
-    val topic = if (customTopic.isNotBlank()) customTopic.trim() else getDefaultTopic(niche)
+    if (customTopic.isNotBlank()) {
+      return buildDynamicCustomTopicScript(niche, customTopic.trim(), duration, tone)
+    }
+    val topic = getDefaultTopic(niche)
 
     return when (niche) {
       ScriptNiche.FACTS -> buildFactsScript(niche, topic, duration, tone)
@@ -28,6 +31,169 @@ object ScriptEngine {
       ScriptNiche.LIFE_HACKS -> buildLifeHacksScript(niche, topic, duration, tone)
     }
   }
+
+  private fun buildDynamicCustomTopicScript(
+    niche: ScriptNiche,
+    topic: String,
+    duration: ScriptDuration,
+    tone: ScriptTone
+  ): GeneratedShortsScript {
+    val cleanTopic = topic.trim()
+    val title = when (tone) {
+      ScriptTone.DRAMATIC -> "The Classified Truth About $cleanTopic"
+      ScriptTone.EDUCATIONAL -> "Why Everything You Know About $cleanTopic Is Wrong"
+      ScriptTone.HIGH_ENERGY -> "The Insane Reality Behind $cleanTopic"
+      ScriptTone.MYSTERIOUS -> "The Unsolved Secret of $cleanTopic"
+      ScriptTone.CYNICAL -> "The Brutal Truth About $cleanTopic"
+    }
+
+    val (hookLead, loopBridge) = when (tone) {
+      ScriptTone.DRAMATIC -> "Almost nobody understands what actually happened with $cleanTopic..." to "...and that explains why almost nobody understands what actually happened with $cleanTopic!"
+      ScriptTone.EDUCATIONAL -> "You have been told the exact opposite your whole life about $cleanTopic..." to "...which proves you have been told the exact opposite your whole life about $cleanTopic!"
+      ScriptTone.HIGH_ENERGY -> "Stop scrolling right now if you haven't seen the truth about $cleanTopic..." to "...which is why you must stop scrolling right now if you haven't seen the truth about $cleanTopic!"
+      ScriptTone.MYSTERIOUS -> "Deep inside classified records, an anomaly about $cleanTopic was discovered..." to "...leaving only the question of what happened when an anomaly about $cleanTopic was discovered!"
+      ScriptTone.CYNICAL -> "Nobody wants to admit the harsh reality behind $cleanTopic..." to "...and that is exactly why nobody wants to admit the harsh reality behind $cleanTopic!"
+    }
+
+    val visualStyle = when (tone) {
+      ScriptTone.DRAMATIC -> "dark moody volumetric lighting, deep violet and crimson shadows, high cinematic contrast"
+      ScriptTone.EDUCATIONAL -> "clean hyperrealistic studio lighting, luminous cyan and amber holographic data overlays"
+      ScriptTone.HIGH_ENERGY -> "high-velocity dynamic camera push, flashing emergency amber beacons, anamorphic lens flare"
+      ScriptTone.MYSTERIOUS -> "surreal fog, eerie monochromatic silhouette, subtle bioluminescent glow"
+      ScriptTone.CYNICAL -> "raw gritty urban realism, desaturated industrial shadows, high texture clarity"
+    }
+
+    val hookVisual = "cinematic 9:16 vertical shot, macro visual capturing $cleanTopic, $visualStyle, 8k --ar 9:16"
+
+    val scenes = when (duration) {
+      ScriptDuration.FIFTEEN -> listOf(
+        ScriptScene(
+          sceneNumber = 1,
+          timecode = "0:00 - 0:04",
+          voiceover = hookLead,
+          visualPrompt = "cinematic 9:16 vertical shot, dramatic macro shot capturing $cleanTopic, $visualStyle, hyperrealistic, 8k --ar 9:16",
+          visualMotion = "Rapid zoom in to subject",
+          soundEffect = "Deep sub-bass impact with electric shimmer"
+        ),
+        ScriptScene(
+          sceneNumber = 2,
+          timecode = "0:04 - 0:10",
+          voiceover = "When you look deeper into $cleanTopic, researchers uncovered an anomaly that breaks every standard rule.",
+          visualPrompt = "cinematic 9:16 vertical shot, dynamic cross-section revealing the inner mechanism of $cleanTopic, glowing particles, $visualStyle --ar 9:16",
+          visualMotion = "Glitch whip-pan transition, fast push",
+          soundEffect = "Digital glitch whoosh"
+        ),
+        ScriptScene(
+          sceneNumber = 3,
+          timecode = "0:10 - 0:15",
+          voiceover = "And when you realize what this really means, you understand why...",
+          visualPrompt = "cinematic 9:16 vertical shot, breathtaking wide perspective framing $cleanTopic against an infinite horizon, moody rim light --ar 9:16",
+          visualMotion = "Infinite backward camera dolly",
+          soundEffect = "Subtle cinematic riser fading abruptly"
+        )
+      )
+      ScriptDuration.THIRTY -> listOf(
+        ScriptScene(
+          sceneNumber = 1,
+          timecode = "0:00 - 0:04",
+          voiceover = hookLead,
+          visualPrompt = "cinematic 9:16 vertical shot, extreme close-up of $cleanTopic, $visualStyle, 8k photorealistic octane render --ar 9:16",
+          visualMotion = "Rapid zoom in to subject",
+          soundEffect = "Deep sub-bass impact with electric shimmer"
+        ),
+        ScriptScene(
+          sceneNumber = 2,
+          timecode = "0:04 - 0:12",
+          voiceover = "Everyone thought $cleanTopic was just another normal concept, until researchers documented what actually happens behind closed doors.",
+          visualPrompt = "cinematic 9:16 vertical shot, high-tech inspection of $cleanTopic, cinematic neon rim lighting, floating dust particles --ar 9:16",
+          visualMotion = "Slow rotational camera tilt",
+          soundEffect = "Metallic resonance with low reverb"
+        ),
+        ScriptScene(
+          sceneNumber = 3,
+          timecode = "0:12 - 0:21",
+          voiceover = "Deep inside the confidential data, they discovered an impossible pattern that completely rewrites how we understand $cleanTopic.",
+          visualPrompt = "cinematic 9:16 vertical shot, surreal visual metaphor representing $cleanTopic transforming, dynamic motion blur, 8k --ar 9:16",
+          visualMotion = "Dynamic push-in through glowing core",
+          soundEffect = "Electric zap whoosh"
+        ),
+        ScriptScene(
+          sceneNumber = 4,
+          timecode = "0:21 - 0:30",
+          voiceover = "If this continues unchecked, everything we took for granted shifts in an instant. And that single revelation is what makes people realize...",
+          visualPrompt = "cinematic 9:16 vertical shot, heroic silhouette standing before a majestic skyline backdrop, cinematic lens flare, $cleanTopic theme --ar 9:16",
+          visualMotion = "Fast camera pull-back with speed ramp",
+          soundEffect = "Suspense riser cutting off sharply at loop"
+        )
+      )
+      ScriptDuration.SIXTY -> listOf(
+        ScriptScene(
+          sceneNumber = 1,
+          timecode = "0:00 - 0:04",
+          voiceover = hookLead,
+          visualPrompt = "cinematic 9:16 vertical shot, dramatic high-tension close-up of $cleanTopic, $visualStyle, hyperrealistic, 8k --ar 9:16",
+          visualMotion = "Rapid zoom in to subject",
+          soundEffect = "Deep sub-bass impact with electric shimmer"
+        ),
+        ScriptScene(
+          sceneNumber = 2,
+          timecode = "0:04 - 0:16",
+          voiceover = "For years, everyone assumed $cleanTopic was straightforward. But secret tests revealed an anomaly that defies standard logic.",
+          visualPrompt = "cinematic 9:16 vertical shot, futuristic laboratory analysis of $cleanTopic, floating holographic diagnostics and data streams --ar 9:16",
+          visualMotion = "Whip pan between monitors",
+          soundEffect = "Static burst with low rumble"
+        ),
+        ScriptScene(
+          sceneNumber = 3,
+          timecode = "0:16 - 0:30",
+          voiceover = "When experts pushed $cleanTopic to its absolute limits, the readings spiked thirty times higher than expected, proving an unseen mechanism.",
+          visualPrompt = "cinematic 9:16 vertical shot, intense kinetic camera zoom through the core of $cleanTopic, sparks and volumetric energy waves --ar 9:16",
+          visualMotion = "Extreme speed-ramp forward tracking shot",
+          soundEffect = "High-speed air whoosh"
+        ),
+        ScriptScene(
+          sceneNumber = 4,
+          timecode = "0:30 - 0:45",
+          voiceover = "That is why top industry insiders have been quietly restructuring everything around $cleanTopic, preparing for the inevitable shift.",
+          visualPrompt = "cinematic 9:16 vertical shot, silhouette of mastermind strategist standing before high-resolution monitors displaying $cleanTopic global metrics --ar 9:16",
+          visualMotion = "Slow motion 360-degree orbit around hologram",
+          soundEffect = "Glass resonance and bass drop"
+        ),
+        ScriptScene(
+          sceneNumber = 5,
+          timecode = "0:45 - 0:60",
+          voiceover = "The real question isn't if this changes the future, but whether you will be ready before...",
+          visualPrompt = "cinematic 9:16 vertical shot, epic cinematic pullback shot of $cleanTopic standing triumphant under starry skies, 8k --ar 9:16",
+          visualMotion = "Slow majestic tilt up into stars",
+          soundEffect = "Tension riser leading into seamless loop"
+        )
+      )
+    }
+
+    val hashtags = listOf(
+      "#Shorts",
+      "#${cleanTopic.replace(" ", "").take(15)}",
+      "#${niche.name.lowercase().replace("_", "")}",
+      "#MindBlown",
+      "#Viral"
+    )
+
+    return GeneratedShortsScript(
+      title = title,
+      niche = niche,
+      duration = duration,
+      tone = tone,
+      hookVisual = hookVisual,
+      hookSpoken = hookLead,
+      scenes = scenes,
+      loopEnding = loopBridge,
+      viralScore = 96,
+      viralReason = "Topic-driven pattern interrupt ($cleanTopic) + ${tone.name.lowercase()} pacing cadence + seamless retention loop bridge.",
+      hashtags = hashtags,
+      estimatedWpm = 160
+    )
+  }
+
 
   private fun getDefaultTopic(niche: ScriptNiche): String {
     return when (niche) {
