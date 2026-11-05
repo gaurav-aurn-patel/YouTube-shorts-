@@ -1184,15 +1184,35 @@
 
     setupChips('nicheChips', (el) => {
       currentNiche = el.getAttribute('data-niche') || 'space';
+      triggerDynamicUpdate();
     });
 
     setupChips('durationChips', (el) => {
       currentDuration = parseInt(el.getAttribute('data-duration') || '30', 10);
+      triggerDynamicUpdate();
     });
 
     setupChips('toneChips', (el) => {
       currentTone = el.getAttribute('data-tone') || 'dramatic';
+      triggerDynamicUpdate();
     });
+
+    // Helper to dynamically update output when chips or topic change
+    function triggerDynamicUpdate() {
+      const customTopic = document.getElementById('topicInput').value.trim();
+      const activeApiKey = apiKeyInput.value.trim() || localStorage.getItem(OPENAI_STORAGE_KEY) || '';
+      
+      // If no OpenAI key or on chip switch, update dynamic preview immediately
+      if (!activeApiKey) {
+        if (customTopic) {
+          const scriptData = generateDynamicScript(customTopic, currentNiche, currentDuration, currentTone);
+          renderScript(scriptData);
+        } else {
+          const scriptData = scriptsDatabase[currentNiche] || scriptsDatabase.space;
+          renderScript(scriptData);
+        }
+      }
+    }
 
     // Render Script Output
     function renderScript(data) {
@@ -1229,51 +1249,120 @@
     // Dynamic script generator for custom topics
     function generateDynamicScript(topic, niche, duration, tone) {
       const cleanTopic = topic.trim();
-      const displayTitle = cleanTopic.length > 44 ? cleanTopic.substring(0, 41) + '...' : cleanTopic;
 
-      // Tone-specific vocabulary and visual aesthetics
-      const toneMap = {
-        dramatic: {
-          hookLead: "Almost nobody understands what actually happened with",
-          bridgeLead: "and that is the exact reason why almost nobody understands what actually happened with",
-          twist: "Deep inside the confidential data, researchers uncovered an anomaly that breaks every standard rule.",
-          implication: "If this continues unchecked, everything we took for granted shifts in an instant.",
-          visualVibe: "dark moody volumetric lighting, deep violet and crimson shadows, high cinematic contrast, dramatic rim lighting"
+      // Clean topic title format
+      let displayTitle = cleanTopic;
+      if (!/^(the|why|how|what|inside|secret|top)/i.test(cleanTopic)) {
+        const titleTemplates = {
+          dramatic: `The Classified Truth About ${cleanTopic}`,
+          mysterious: `The Unexplained Secret of ${cleanTopic}`,
+          energy: `Why ${cleanTopic} Is Crazier Than You Think`,
+          educational: `Why Everything You Knew About ${cleanTopic} Is Wrong`,
+          urgent: `The Urgent Warning About ${cleanTopic}`
+        };
+        displayTitle = titleTemplates[tone] || `The Untold Reality of ${cleanTopic}`;
+      }
+      if (displayTitle.length > 46) displayTitle = displayTitle.substring(0, 43) + '...';
+
+      // Niche domains and context
+      const nicheMap = {
+        space: {
+          field: "astronomy and deep space observation",
+          setting: "floating in deep cosmic void surrounded by stellar nebulae",
+          discovery: "space telescopes detected an impossible gravitational anomaly directly linked to",
+          insight: "It defies standard physics, moving through the cosmic vacuum at unprecedented speed",
+          visualPrompt: "cosmic void, swirling accretion disk, luminous stellar dust, deep purple and violet nebulae rays"
         },
-        educational: {
-          hookLead: "You have been told the exact opposite your whole life about",
-          bridgeLead: "which proves you have been told the exact opposite your whole life about",
-          twist: "When you analyze the actual empirical data, the common assumption completely falls apart.",
-          implication: "This single counter-intuitive mechanism explains why 99% of people misunderstand what is really going on.",
-          visualVibe: "clean hyperrealistic studio lighting, luminous cyan and amber holographic data overlays, 8k octane render"
+        tech: {
+          field: "autonomous AI systems and cybernetics",
+          setting: "dark high-security data center corridor with glowing red server blades",
+          discovery: "researchers stress-testing neural networks uncovered an unexplainable pattern in",
+          insight: "The system began rewriting its own instructions in real time without human authorization",
+          visualPrompt: "futuristic holographic neural network, translucent glass displays, pulsing neon cyan data circuits"
         },
-        urgent: {
-          hookLead: "Stop scrolling right now if you haven't seen the truth about",
-          bridgeLead: "which is why you must stop scrolling right now if you haven't seen the truth about",
-          twist: "Critical evidence surfaced in the last 48 hours that experts are urgently trying to decipher.",
-          implication: "The window of opportunity to understand this is closing faster than anyone anticipated.",
-          visualVibe: "high-velocity dynamic camera push, flashing emergency amber beacons, intense anamorphic lens flare"
+        facts: {
+          field: "cognitive neuroscience and human perception",
+          setting: "sleek biometric research laboratory with floating holographic neural scans",
+          discovery: "neuroscientists monitoring brainwave frequencies proved the common assumption about",
+          insight: "Your subconscious mind processes this data eighty milliseconds before your conscious mind realizes it",
+          visualPrompt: "macro human eye iris reflecting neural synaptic network, glowing amber dust, hyperrealistic 8k"
         },
-        humorous: {
-          hookLead: "The wildest, most absurd thing humans never noticed about",
-          bridgeLead: "and that is the wildest, most absurd thing humans never noticed about",
-          twist: "You literally cannot make this up: the actual explanation sounds like an impossible parody.",
-          implication: "Once you see this once, you will never be able to look at normal life the same way again.",
-          visualVibe: "hyper-saturated vibrant colors, whimsical high-key lighting, surreal photorealistic details, playful depth of field"
+        mystery: {
+          field: "classified historical archives",
+          setting: "rainy twilight cobblestone alleyway under flickering streetlights and heavy fog",
+          discovery: "newly declassified documents revealed what authorities tried to erase regarding",
+          insight: "Every official witness gave identical descriptions before the case was abruptly sealed",
+          visualPrompt: "shadowy silhouette opening rusted iron vault containing stamped confidential dossier, cinematic mood"
         },
-        inspiring: {
-          hookLead: "If you feel exhausted today, this single truth about",
-          bridgeLead: "and that is why if you feel exhausted today, this single truth about",
-          twist: "History proves that the most resilient breakthroughs always emerged through this exact crucible.",
-          implication: "Every barrier you encounter right now is building the exact armor you need for what comes next.",
-          visualVibe: "golden hour cinematic sunrise rays, ethereal atmospheric mist, heroic low-angle silhouette, 8k photorealistic"
+        money: {
+          field: "elite wealth psychology and legal loopholes",
+          setting: "Manhattan luxury skyscraper penthouse overlooking twilight skyline, dark Italian marble",
+          discovery: "tax attorneys confirmed how ultra-wealthy insiders legally exploit",
+          insight: "They borrow against asset collateral at low interest rates, turning taxable revenue into tax-free leverage",
+          visualPrompt: "gold fountain pen hovering over signed financial agreement, neon green stock market graphs"
+        },
+        motivation: {
+          field: "stoic philosophy and high-performance psychology",
+          setting: "weathered marble temple on mountain peak during thunderstorm with golden sunrise breaking clouds",
+          discovery: "ancient stoic masters practiced a mental principle that explains the true power of",
+          insight: "Voluntary exposure to discomfort physically rewires your dopamine baseline and eliminates self-doubt",
+          visualPrompt: "lone warrior silhouette standing atop windswept cliff, golden rays slicing through storm clouds"
         }
       };
 
-      const currentT = toneMap[tone] || toneMap.dramatic;
-      const hook = `${currentT.hookLead} ${cleanTopic}...`;
-      const loop = `...${currentT.bridgeLead} ${cleanTopic}!`;
-      const rationale = `Topic-driven pattern interrupt (${cleanTopic}) + ${tone} pacing cadence + seamless retention loop bridge.`;
+      const nData = nicheMap[niche] || nicheMap.space;
+
+      // Tone styles and hooks
+      const toneMap = {
+        dramatic: {
+          hook: `Scientists and researchers just uncovered an unnerving fact about ${cleanTopic}...`,
+          loop: `...and that explains why scientists and researchers just uncovered an unnerving fact about ${cleanTopic}!`,
+          vibe: "dark moody volumetric lighting, deep violet and crimson shadows, high cinematic contrast, dramatic rim lighting",
+          twist: `Deep inside the data from ${nData.field}, ${nData.discovery} ${cleanTopic}.`,
+          mechanism: `${nData.insight}. It completely redefines everything we were taught about ${cleanTopic}.`,
+          warning: `If this continues without public awareness, the ramifications for ${cleanTopic} will be irreversible.`,
+          takeaway: `And that single reality is why people are finally starting to understand...`
+        },
+        mysterious: {
+          hook: `Nobody is allowed to talk about what actually happened with ${cleanTopic}...`,
+          loop: `...leaving only the chilling question of what actually happened with ${cleanTopic}!`,
+          vibe: "surreal thick atmospheric fog, eerie monochromatic silhouette, subtle bioluminescent cyan glow",
+          twist: `When researchers probed ${nData.field}, ${nData.discovery} ${cleanTopic}.`,
+          mechanism: `${nData.insight}. But when anyone asks for the original source records, they vanish without a trace.`,
+          warning: `The official explanation doesn't add up, and the timeline for ${cleanTopic} has major gaps.`,
+          takeaway: `Which leaves investigators with one haunting question...`
+        },
+        energy: {
+          hook: `Stop scrolling right now if you haven't seen the insanity behind ${cleanTopic}!`,
+          loop: `...which is why you must stop scrolling right now if you haven't seen the insanity behind ${cleanTopic}!`,
+          vibe: "high-velocity dynamic camera push, flashing emergency amber beacons, anamorphic lens flare, speed ramp",
+          twist: `In the world of ${nData.field}, ${nData.discovery} ${cleanTopic}.`,
+          mechanism: `${nData.insight}. This is literally ten times more extreme than what anyone expected!`,
+          warning: `Most people will sleep on this until it's trending everywhere on social media.`,
+          takeaway: `So remember this exact breakdown the next time you hear about...`
+        },
+        educational: {
+          hook: `You have been told the exact opposite your whole life about ${cleanTopic}...`,
+          loop: `...which proves you have been told the exact opposite your whole life about ${cleanTopic}!`,
+          vibe: "clean hyperrealistic studio lighting, luminous cyan and amber holographic data overlays, 8k octane render",
+          twist: `Empirical findings in ${nData.field} show that ${nData.discovery} ${cleanTopic}.`,
+          mechanism: `${nData.insight}. This counter-intuitive mechanism contradicts ninety percent of popular theories.`,
+          warning: `Once you examine the primary data, the standard explanation completely disintegrates.`,
+          takeaway: `And that is the exact reason why modern experts now agree...`
+        },
+        urgent: {
+          hook: `Pay close attention, because within the next 24 hours, the truth about ${cleanTopic} changes everything...`,
+          loop: `...and that is why within the next 24 hours, the truth about ${cleanTopic} changes everything!`,
+          vibe: "urgent kinetic push-in, red emergency warning lights reflecting on metallic surfaces, motion blur",
+          twist: `Breaking updates in ${nData.field} confirmed that ${nData.discovery} ${cleanTopic}.`,
+          mechanism: `${nData.insight}. The timeline has accelerated far faster than anyone anticipated.`,
+          warning: `The window to get ahead of this shift is closing in real time.`,
+          takeaway: `Be ready before the mainstream catches on, because...`
+        }
+      };
+
+      const tData = toneMap[tone] || toneMap.dramatic;
+      const rationale = `Topic pattern interrupt (${cleanTopic}) + ${niche} domain authority + ${tone} pacing cadence + seamless retention loop bridge.`;
 
       let scenes = [];
       if (duration === 15) {
@@ -1281,20 +1370,20 @@
           {
             num: 1,
             time: "0:00 - 0:04",
-            voice: `${currentT.hookLead} ${cleanTopic}...`,
-            prompt: `cinematic 9:16 vertical shot, dramatic macro shot capturing ${cleanTopic}, ${currentT.visualVibe}, hyperrealistic, 8k --ar 9:16`
+            voice: tData.hook,
+            prompt: `cinematic 9:16 vertical shot, dramatic macro shot capturing ${cleanTopic}, ${nData.setting}, ${tData.vibe}, hyperrealistic, 8k --ar 9:16`
           },
           {
             num: 2,
             time: "0:04 - 0:10",
-            voice: `${currentT.twist} ${cleanTopic} isn't behaving normally—it triggers an immediate chain reaction.`,
-            prompt: `cinematic 9:16 vertical shot, dynamic cross-section revealing the inner mechanism of ${cleanTopic}, glowing particles, ${currentT.visualVibe} --ar 9:16`
+            voice: `${tData.twist} ${nData.insight}.`,
+            prompt: `cinematic 9:16 vertical shot, dynamic cross-section of ${cleanTopic}, ${nData.visualPrompt}, ${tData.vibe} --ar 9:16`
           },
           {
             num: 3,
             time: "0:10 - 0:15",
-            voice: `And when you realize what this really means, you understand why...`,
-            prompt: `cinematic 9:16 vertical shot, breathtaking wide perspective framing ${cleanTopic} against an infinite horizon, moody cinematic rim light --ar 9:16`
+            voice: tData.takeaway,
+            prompt: `cinematic 9:16 vertical shot, breathtaking wide perspective framing ${cleanTopic} against an infinite horizon, moody rim light, 8k --ar 9:16`
           }
         ];
       } else if (duration === 60) {
@@ -1302,32 +1391,32 @@
           {
             num: 1,
             time: "0:00 - 0:04",
-            voice: `${currentT.hookLead} ${cleanTopic}...`,
-            prompt: `cinematic 9:16 vertical shot, dramatic high-tension close-up of ${cleanTopic}, ${currentT.visualVibe}, hyperrealistic, 8k --ar 9:16`
+            voice: tData.hook,
+            prompt: `cinematic 9:16 vertical shot, high-tension close-up capturing ${cleanTopic}, ${nData.setting}, ${tData.vibe}, hyperrealistic, 8k --ar 9:16`
           },
           {
             num: 2,
             time: "0:04 - 0:16",
-            voice: `For years, everyone assumed ${cleanTopic} was straightforward. But secret tests revealed an anomaly that defies standard logic.`,
-            prompt: `cinematic 9:16 vertical shot, futuristic laboratory analysis of ${cleanTopic}, floating holographic diagnostics and data streams --ar 9:16`
+            voice: tData.twist,
+            prompt: `cinematic 9:16 vertical shot, high-tech analytical inspection of ${cleanTopic}, ${nData.visualPrompt}, floating data metrics --ar 9:16`
           },
           {
             num: 3,
             time: "0:16 - 0:30",
-            voice: `${currentT.twist} When experts pushed ${cleanTopic} to its absolute limits, the readings spiked thirty times higher than expected.`,
-            prompt: `cinematic 9:16 vertical shot, intense kinetic camera zoom through the core of ${cleanTopic}, sparks and volumetric energy waves --ar 9:16`
+            voice: tData.mechanism,
+            prompt: `cinematic 9:16 vertical shot, kinetic camera push through the core of ${cleanTopic}, sparks and volumetric energy waves, 8k --ar 9:16`
           },
           {
             num: 4,
             time: "0:30 - 0:45",
-            voice: `${currentT.implication} That is why top industry insiders have been quietly restructuring everything around ${cleanTopic}.`,
-            prompt: `cinematic 9:16 vertical shot, silhouette of mastermind strategist standing before high-resolution monitors displaying ${cleanTopic} global metrics --ar 9:16`
+            voice: tData.warning,
+            prompt: `cinematic 9:16 vertical shot, silhouette of mastermind strategist observing ${cleanTopic} diagnostics on massive panoramic screens, 8k --ar 9:16`
           },
           {
             num: 5,
             time: "0:45 - 0:60",
-            voice: `The real question isn't if this changes the future, but whether you will be ready before...`,
-            prompt: `cinematic 9:16 vertical shot, epic cinematic pullback shot of ${cleanTopic} standing triumphant under starry skies, 8k --ar 9:16`
+            voice: tData.takeaway,
+            prompt: `cinematic 9:16 vertical shot, epic cinematic pullback shot of ${cleanTopic} triumphant under twilight skies, volumetric rays, 8k --ar 9:16`
           }
         ];
       } else {
@@ -1336,26 +1425,26 @@
           {
             num: 1,
             time: "0:00 - 0:04",
-            voice: `${currentT.hookLead} ${cleanTopic}...`,
-            prompt: `cinematic 9:16 vertical shot, extreme close-up of ${cleanTopic}, ${currentT.visualVibe}, 8k photorealistic octane render --ar 9:16`
+            voice: tData.hook,
+            prompt: `cinematic 9:16 vertical shot, dramatic macro shot capturing ${cleanTopic}, ${nData.setting}, ${tData.vibe}, 8k octane render --ar 9:16`
           },
           {
             num: 2,
             time: "0:04 - 0:12",
-            voice: `Everyone thought ${cleanTopic} was just another normal concept, until researchers documented what actually happens behind closed doors.`,
-            prompt: `cinematic 9:16 vertical shot, high-tech inspection of ${cleanTopic}, cinematic neon rim lighting, floating dust particles in volumetric beam --ar 9:16`
+            voice: tData.twist,
+            prompt: `cinematic 9:16 vertical shot, analytical inspection of ${cleanTopic}, ${nData.visualPrompt}, neon rim lighting, floating particles --ar 9:16`
           },
           {
             num: 3,
             time: "0:12 - 0:21",
-            voice: `${currentT.twist} It completely rewrites how we understand the entire mechanism of ${cleanTopic}.`,
-            prompt: `cinematic 9:16 vertical shot, surreal visual metaphor representing ${cleanTopic} transforming, dynamic motion blur, 8k --ar 9:16`
+            voice: tData.mechanism,
+            prompt: `cinematic 9:16 vertical shot, surreal visual transformation representing the inner power of ${cleanTopic}, dynamic motion blur, 8k --ar 9:16`
           },
           {
             num: 4,
             time: "0:21 - 0:30",
-            voice: `${currentT.implication} And that single revelation is what makes people realize...`,
-            prompt: `cinematic 9:16 vertical shot, heroic silhouette standing before a majestic skyline backdrop, cinematic lens flare, ${cleanTopic} theme --ar 9:16`
+            voice: `${tData.warning} ${tData.takeaway}`,
+            prompt: `cinematic 9:16 vertical shot, heroic silhouette standing before twilight skyline framing ${cleanTopic}, cinematic lens flare, 8k --ar 9:16`
           }
         ];
       }
@@ -1364,8 +1453,8 @@
         title: displayTitle,
         score: "96/100",
         rationale: rationale,
-        hook: hook,
-        loop: loop,
+        hook: tData.hook,
+        loop: tData.loop,
         scenes: scenes
       };
     }
@@ -1438,8 +1527,18 @@ Return a valid JSON object matching this schema:
 
     // Generate Button Handler
     const generateBtn = document.getElementById('generateBtn');
+    const topicInput = document.getElementById('topicInput');
+
+    // Trigger generation on Enter key inside custom topic input
+    topicInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        generateBtn.click();
+      }
+    });
+
     generateBtn.addEventListener('click', async () => {
-      const customTopic = document.getElementById('topicInput').value.trim();
+      const customTopic = topicInput.value.trim();
       const activeApiKey = apiKeyInput.value.trim() || localStorage.getItem(OPENAI_STORAGE_KEY) || '';
 
       // If user provided OpenAI API key, use live AI generation
